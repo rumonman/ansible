@@ -1,0 +1,22 @@
+- name: Install and Configure Httpd Service
+  hosts: web
+  tasks:
+        - name: Install Apache Server
+          yum:
+              name: httpd
+              state: present
+        - name: Start And Enable Apache Server 
+          service:
+              name: httpd
+              state: started
+              enabled: True
+        - name: Stop And Disable Firewall Service 
+          service:
+              name: firewalld
+              state: stopped
+              enabled: False
+        - name: Copy to All File in Remote Server 
+          copy:
+              src: /var/lib/jenkins/workspace/webserver/
+              dest: /var/www/html/
+
