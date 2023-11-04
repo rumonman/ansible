@@ -1,0 +1,50 @@
+- name: Install And Configuration Docker in Remote Server Centos 7
+  hosts: docker
+  tasks:
+        - name: Remove Docker Old repo 
+          yum:
+              name: 
+                   - docker
+                   - docker-client
+                   - docker-client-latest
+                   - docker-common
+                   - docker-latest
+                   - docker-latest-logrotate
+                   - docker-logrotate
+                   - docker-engine
+              state: absent
+        - name: Install required Pkge
+          yum:
+              name:
+                   - yum-utils
+              state: latest
+        - name: Add Docker Repo
+          get_url:    
+              url: https://download.docker.com/linux/centos/docker-ce.repo
+              dest: /etc/yum.repos.d/docker-ce.repo
+        - name: Install and Configure  Docker Container 
+          yum:         
+              name:  
+                   - docker-ce
+                   - docker-ce-cli
+                   - containerd.io
+                   - docker-buildx-plugin
+                   - docker-compose-plugin
+              state: latest
+        - name: Start and Emable Docker Container
+          service:
+              name: docker
+              state: started
+              enabled: True
+                          
+                          
+#  Copy and Docker Run Configuration File 
+        - name: Copy All Docker File in Remote Server
+          copy:
+              src: /var/lib/jenkins/workspace/Docker-job/
+              dest: /root/docker-shops/
+        - name: Up and Run Docker Continer 
+          shell:
+              cmd: "docker compose up -d"
+              chdir: /root/docker-shops/
+                            
